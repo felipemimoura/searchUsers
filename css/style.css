@@ -1,0 +1,39 @@
+body {
+  width: 800px;
+  border: 1px solid red;
+}
+h1 {
+  text-align: center;
+}
+
+label {
+  display: block;
+  font-size: 18px;
+  font-weight: bold;
+  color: #1cc0bb;
+  text-align: left;
+  margin-left: 5px;
+}
+input#search {
+  width: 600px;
+  margin-left: 5px;
+}
+input#button {
+  background-color: #1cc0bb;
+  color: black;
+  font-weight: bold;
+  border-radius: 5px;
+  padding: 5px;
+}
+div.people {
+  border: 1px solid black;
+  align-items: center;
+}
+div.people-list {
+  display: inline-block;
+  width: 300px;
+  border: 1px solid red;
+}
+h5 {
+  text-align: center;
+}
