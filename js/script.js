@@ -26,8 +26,86 @@ async function fetchPeople() {
       gender,
     };
   });
-  console.log(allPeopleFind);
   return allPeopleFind;
+}
+
+//Filtro de usuários
+function filterUsers(results, indice) {
+  const users = results.filter((person) => {
+    return person.name.toLowerCase().includes(indice.toLowerCase());
+  });
+  return users;
+}
+
+function noLetter(letter) {
+  search.addEventListener('keyup', () => {
+    if (search.value === '') {
+      letter.innerHTML = '';
+    }
+  });
+}
+
+//Renderizando usuarios
+function renderUser(users) {
+  let usersHTML = '<div>';
+  let countUsers = 0;
+
+  users.forEach((person) => {
+    const { name, picture, age } = person;
+
+    const renderHTML = `
+    <div class='users>
+      <img src="${picture}" alt="${name}" />
+      <span>${name}, ${age} anos </span>
+    </div>`;
+
+    usersHTML += renderHTML;
+    countUsers += 1;
+  });
+  usersHTML += '</div>';
+  usersFiltred.innerHTML = usersHTML;
+  usersFound.innerHTML = `${countUsers} usuário(s) encontrados(s)`;
+
+  noLetter(usersFound);
+
+  const notFoundUser = document.querySelector('#notFoundUser');
+  noUserFound.innerHTML = '';
+}
+
+//renderizando estatisticas
+function renderStatistic(users) {
+  let renderHTML = '<div>';
+  let countMale = 0,
+    countFemale = 0;
+  let sumAge = 0;
+  averageAge = 0;
+
+  let countUsers = 0;
+
+  users.forEach((person) => {
+    const { age, gender } = person;
+
+    gender === 'male' ? (countMale += 1) : (countFemale += 1);
+    sumAge += age;
+
+    countUsers += 1;
+  });
+  averageAge = sumAge / countUsers;
+  averageAge = averageAge.toFixed(2);
+  renderHTML += `
+            <div><p>Sexo Masculino: ${countMale}</p></div>
+            <div><p>Sexo Feminino: ${countFemale}</p></div>
+            <div><p>Soma das idades: ${sumAge}</p></div>
+            <div><p>Média das idades: ${averageAge}</p></div>
+  `;
+  statisticsFound.innerHTML = 'Estatísticas';
+  renderHTML += '</div>';
+  filtredStatistics.innerHTML = renderHTML;
+
+  noLetter(statisticsFound);
+
+  const notStatisticsFound = document.querySelector('#notStatisticsFound');
+  notStatisticsFound.innerHTML = '';
 }
 
 function load() {
@@ -41,7 +119,21 @@ function load() {
     if (search.value === '') {
       usersFiltred.innerHTML = '';
       filtredStatistics.innerHTML = '';
+      //Monitorando o html
       const notFoundUser = document.querySelector('#notFoundUser');
+      const notStatisticsFound = document.querySelector('#notStatisticsFound');
+      //Mostrando mensagem no HTML
+      notFoundUser.innerHTML = 'Nada encontrado';
+      notStatisticsFound.innerHTML = 'Nenhuma estatística encontrada';
+    } else {
+      fetchPeople()
+        .then((results) => {
+          const users = filterUsers(results, search.value);
+
+          renderUser(users);
+          renderStatistic(users);
+        })
+        .catch((error) => {});
     }
   });
 }
